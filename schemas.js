@@ -149,3 +149,21 @@ console.log(axl.fullName);
 axl.fullName = 'William Rose';
 console.log('Set using a virtual:');
 console.log(axl.name.first + ' ' + axl.name.last);
+
+// *********************************************************************
+// Aliases - convert a short name prop in db into longer name for readability
+// does this really help save network bandwidth???
+let personSchema2 = new Schema({
+  n: {
+    type: String,
+    alias: 'name'
+  }
+});
+
+let Person2 = mongoose.model('Person2', personSchema2);
+
+let person2 = new Person2({ name: 'Val' });
+console.log('Using Aliases (short in db, longer in code for readability)');
+console.log(person2);
+console.log(person2.toObject({ virtuals: true }));
+console.log(person2.name);
