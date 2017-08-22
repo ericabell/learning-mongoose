@@ -48,7 +48,7 @@ m.living = false;
 m.updated = new Date;
 m.age = 40;
 m.mixed = { any: { thing: 'i want' } };
-m.markModified('mixed');
+m.markModified('mixed');  // mongoose can't detect changes inside...
 m._someId = new mongoose.Types.ObjectId;
 m.array.push(1);
 m.ofString.push("strings!");
@@ -65,4 +65,37 @@ m.nested.stuff = 'good';
 m.save()
  .then( (doc) => {
   console.log('Thing m is saved to collection things');
-})
+});
+
+// ****************************************************
+// Schema-type options
+// ALL: required, default, select, validate, get, set, alias
+// there are some types that apply for specific schema types
+
+let schema2 = new Schema({
+  test: {
+    type: String,
+    lowercase: true // always convert to lowercase
+  }
+});
+
+let Lowercase = mongoose.model('Lowercase', schema2);
+
+let n = new Lowercase;
+n.test = 'THIS WILL BE ALL LOWERCASE IN DB';
+
+n.save()
+ .then( (doc) => {
+   console.log('saved all uppercase string to db');
+ })
+ .then( () => {
+   Lowercase.find()
+   .then( (docs) => {
+     console.log('* => found all the lowercase');
+     console.log(docs);
+     console.log('* ************************');
+   })
+   .catch( (err) => {
+     console.error(err);
+   });
+ })
