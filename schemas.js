@@ -163,7 +163,37 @@ let personSchema2 = new Schema({
 let Person2 = mongoose.model('Person2', personSchema2);
 
 let person2 = new Person2({ name: 'Val' });
+person2.save()
+  .then( (doc) => {
+    console.log('person2 saved');
+  });
 console.log('Using Aliases (short in db, longer in code for readability)');
 console.log(person2);
 console.log(person2.toObject({ virtuals: true }));
 console.log(person2.name);
+
+// *********************************************************************
+// Options - schemas have some configs you can pass
+//  there are a lot of these, so I'm just going to show a few...
+
+// option: collection is used for specifying the collection name yourself
+//                    rather than utils.toCollectionName doing it for you
+
+// option: timestamps assigns createdAt and updatedAt fields to your schemas
+//         with a type of Date.
+
+var personSchema3 = new Schema({
+  n: {
+    type: String,
+    alias: 'name'
+  }
+}, { collection: 'people',
+     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+ });
+
+let Person3 = mongoose.model('Person3', personSchema3);
+let person3 = new Person3({ name: 'Bob' });
+person3.save()
+  .then( (doc) => {
+    console.log('person3 saved and collection named people');
+  })
